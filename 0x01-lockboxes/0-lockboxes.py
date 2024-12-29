@@ -1,34 +1,20 @@
 #!/usr/bin/python3
+"""lockboxes"""
 
-""" Lockboxes """
 
+def canUnlockAll(boxes: List[List[int]]) -> bool:
+    """Determines if all the boxes can be opened."""
+    n = len(boxes)
+    opened = [False] * n
+    opened[0] = True  # The first box is unlocked
+    keys = set(boxes[0])  # Start with keys from the first box
 
-def canUnlockAll(boxes):
-    """
-    - boxes is a list of lists
-    - A key with the same number as a box opens that box
-    - You can assume all keys will be positive integers
-    - The first box boxes[0] is unlocked
-    - Return True if all boxes can be opened, else return False
-    """
-    canUnlockAll = False
-    keys = {0: True}
-    n_boxes = len(boxes)
-    while(True):
+    while keys:
+        new_keys = set()
+        for key in keys:
+            if 0 <= key < n and not opened[key]:
+                opened[key] = True
+                new_keys.update(boxes[key])
+        keys = new_keys
 
-        n_keys = len(keys)
-
-        for i in range(len(boxes)):
-            if boxes[i] and keys.get(i, False):
-                for j in boxes[i]:
-                    if j < n_boxes:
-                        keys[j] = True
-                    boxes[i] = None
-
-        if not(len(keys) > n_keys):
-            break
-
-    if n_keys == len(boxes):
-        canUnlockAll = True
-
-    return canUnlockAll
+    return all(opened)
